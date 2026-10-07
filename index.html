@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#00a9d6" />
+  <meta name="description" content="走进比奇堡，认识海绵宝宝、派大星、章鱼哥和蟹老板！" />
+  <title>海绵宝宝 · 欢迎来到比奇堡</title>
+  <style>
+    :root {
+      --ocean: #00a9d6;
+      --deep: #075985;
+      --sun: #ffe45c;
+      --coral: #ff8066;
+      --ink: #17324d;
+      --glass: rgba(255,255,255,.78);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Trebuchet MS", "Microsoft YaHei", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.38) 0 3px, transparent 4px),
+        radial-gradient(circle at 82% 31%, rgba(255,255,255,.32) 0 5px, transparent 6px),
+        linear-gradient(180deg, #4bd8ef 0%, #12b6dc 42%, #087dbb 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+    .bubbles { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: -1; }
+    .bubble {
+      position: absolute; bottom: -100px; border: 2px solid rgba(255,255,255,.45);
+      border-radius: 50%; background: rgba(255,255,255,.08);
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: .8; }
+      to { transform: translateY(-120vh) translateX(35px); opacity: 0; }
+    }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
+      padding: 14px clamp(18px, 5vw, 72px);
+      background: rgba(0, 92, 143, .78); backdrop-filter: blur(12px);
+      color: white; border-bottom: 1px solid rgba(255,255,255,.2);
+    }
+    .brand { font-weight: 900; letter-spacing: .5px; font-size: 1.15rem; }
+    nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    nav a { color: white; text-decoration: none; font-weight: 700; font-size: .92rem; opacity: .9; }
+    nav a:hover { opacity: 1; color: var(--sun); }
+    .hero {
+      min-height: 78vh; display: grid; place-items: center; text-align: center;
+      padding: 72px 20px 54px; position: relative;
+    }
+    .hero-inner { max-width: 900px; }
+    .eyebrow {
+      display: inline-block; padding: 8px 15px; border-radius: 999px;
+      background: rgba(255,255,255,.22); color: #fff; border: 1px solid rgba(255,255,255,.4);
+      font-size: .88rem; font-weight: 800; letter-spacing: 1px;
+    }
+    h1 {
+      margin: 18px 0 12px; color: #fff; line-height: .98;
+      font-size: clamp(3.2rem, 10vw, 7.5rem); letter-spacing: -4px;
+      text-shadow: 0 5px 0 #087eae, 0 10px 24px rgba(0,55,100,.2);
+    }
+    h1 span { color: var(--sun); }
+    .hero p { color: #f4fdff; font-size: clamp(1.05rem, 2.4vw, 1.35rem); line-height: 1.8; margin: 22px auto 28px; max-width: 680px; }
+    .hero-buttons { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      border: 0; border-radius: 999px; padding: 13px 22px; font: inherit; font-weight: 900;
+      cursor: pointer; text-decoration: none; transition: transform .2s, box-shadow .2s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(0,45,80,.18); }
+    .btn-primary { color: #684600; background: var(--sun); box-shadow: 0 5px 0 #e5b82d; }
+    .btn-secondary { color: white; background: rgba(0,65,110,.35); border: 1px solid rgba(255,255,255,.55); }
+    .hero-art { font-size: clamp(5rem, 16vw, 10rem); margin: 25px 0 0; filter: drop-shadow(0 16px 12px rgba(0,70,110,.2)); animation: bob 3s ease-in-out infinite; }
+    @keyframes bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
+    main { background: #f2fcff; border-radius: 34px 34px 0 0; padding: 70px clamp(18px, 5vw, 72px) 50px; }
+    section { max-width: 1120px; margin: 0 auto 76px; scroll-margin-top: 90px; }
+    .section-head { text-align: center; margin-bottom: 30px; }
+    .kicker { color: #009cc4; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; font-size: .78rem; }
+    h2 { font-size: clamp(2rem, 5vw, 3.1rem); margin: 8px 0 10px; color: #12466b; }
+    .section-head p { max-width: 650px; margin: 0 auto; color: #557187; line-height: 1.8; }
+    .intro-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; align-items: stretch; }
+    .feature, .fact-card {
+      background: white; border-radius: 24px; padding: clamp(22px, 4vw, 34px);
+      box-shadow: 0 12px 35px rgba(15,102,143,.09); border: 1px solid #d9f2f8;
+    }
+    .feature { background: linear-gradient(135deg, #fff7c8, #fff 72%); }
+    .feature h3 { font-size: 1.55rem; margin: 0 0 12px; color: #174d70; }
+    .feature p, .fact-card p { color: #557187; line-height: 1.9; margin-bottom: 0; }
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .stat { border-radius: 20px; background: #e4f9ff; padding: 22px; }
+    .stat strong { display: block; color: #008fb9; font-size: 1.4rem; margin-bottom: 7px; }
+    .stat span { font-size: .92rem; color: #557187; }
+    .character-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .character {
+      text-align: center; background: white; border: 1px solid #d9f2f8; border-radius: 24px;
+      padding: 24px 17px; box-shadow: 0 10px 28px rgba(15,102,143,.07);
+      transition: transform .22s, box-shadow .22s; cursor: pointer;
+    }
+    .character:hover, .character.active { transform: translateY(-7px); box-shadow: 0 16px 32px rgba(15,102,143,.15); }
+    .character .emoji { font-size: 3.4rem; display: block; margin-bottom: 12px; }
+    .character h3 { margin: 0 0 7px; color: #174d70; }
+    .character .tag { color: #009cc4; font-size: .82rem; font-weight: 900; }
+    .character p { font-size: .92rem; line-height: 1.7; color: #637d8e; }
+    .character-detail {
+      margin-top: 18px; padding: 20px 24px; background: #e4f9ff; border-radius: 18px;
+      color: #24546d; line-height: 1.8; min-height: 76px;
+    }
+    .place-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .place {
+      padding: 25px; border-radius: 22px; color: white; min-height: 190px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 12px 28px rgba(0,75,115,.12);
+    }
+    .place:nth-child(1) { background: linear-gradient(135deg, #ffad57, #ff765e); }
+    .place:nth-child(2) { background: linear-gradient(135deg, #26c6a5, #078fba); }
+    .place:nth-child(3) { background: linear-gradient(135deg, #8e8be8, #5b6ed6); }
+    .place .icon { font-size: 2.5rem; }
+    .place h3 { font-size: 1.3rem; margin: 12px 0 6px; }
+    .place p { margin: 0; line-height: 1.7; color: rgba(255,255,255,.92); }
+    .quote-box {
+      text-align: center; padding: 38px 24px; border-radius: 28px;
+      background: linear-gradient(135deg, #d8f8ff, #fff1b5); border: 1px solid #d2eef5;
+    }
+    .quote-box blockquote { font-size: clamp(1.35rem, 3vw, 2rem); font-weight: 900; color: #155477; margin: 0 0 12px; }
+    .quote-box p { margin: 0; color: #557187; }
+    footer { text-align: center; padding: 28px 18px 40px; color: rgba(255,255,255,.9); background: #087dbb; line-height: 1.8; }
+    footer small { opacity: .78; }
+    .to-top {
+      position: fixed; right: 20px; bottom: 20px; z-index: 5; width: 48px; height: 48px;
+      border-radius: 50%; border: 0; background: var(--sun); color: #684600; font-size: 1.25rem;
+      cursor: pointer; box-shadow: 0 5px 16px rgba(0,40,70,.18); display: none;
+    }
+    .to-top.show { display: block; }
+    @media (max-width: 800px) {
+      .intro-grid { grid-template-columns: 1fr; }
+      .character-grid { grid-template-columns: repeat(2, 1fr); }
+      .place-grid { grid-template-columns: 1fr; }
+      header { align-items: flex-start; flex-direction: column; gap: 9px; }
+      nav { gap: 13px; }
+      h1 { letter-spacing: -2px; }
+    }
+    @media (max-width: 430px) {
+      .character-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .hero { min-height: 70vh; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bubbles" id="bubbles" aria-hidden="true"></div>
+  <header>
+    <div class="brand">🫧 比奇堡档案馆</div>
+    <nav aria-label="主导航">
+      <a href="#about">认识海绵宝宝</a>
+      <a href="#friends">好朋友们</a>
+      <a href="#places">比奇堡地图</a>
+      <a href="#fun">快乐补给站</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-inner">
+      <span class="eyebrow">WELCOME TO BIKINI BOTTOM</span>
+      <h1>海绵宝宝<span>！</span></h1>
+      <p>准备好了吗？一起潜入海底，拜访那个住在菠萝屋、热爱抓水母、每天都元气满满的黄色小海绵！</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary" href="#about">🌊 开始探索</a>
+        <button class="btn btn-secondary" id="surpriseBtn">✨ 给我一点快乐</button>
+      </div>
+      <div class="hero-art" aria-label="海绵宝宝主题表情">🧽</div>
+    </div>
+  </section>
+
+  <main>
+    <section id="about">
+      <div class="section-head">
+        <div class="kicker">Meet the Sponge</div>
+        <h2>这块海绵，有点不一般</h2>
+        <p>海绵宝宝住在太平洋海底的比奇堡，是一位乐观、热心、总能把平凡日子过出花样的海绵。</p>
+      </div>
+      <div class="intro-grid">
+        <article class="feature">
+          <h3>🍍 菠萝屋里的快乐日常</h3>
+          <p>海绵宝宝和他的宠物蜗牛小蜗住在一栋菠萝形状的房子里。他最喜欢的事情包括抓水母、吹泡泡，以及和朋友派大星一起玩耍。</p>
+          <p>工作时间，他是蟹堡王餐厅认真又热情的厨师，尤其擅长制作美味的美味蟹堡。即使遇到麻烦，他也总能用自己的方式重新振作起来。</p>
+        </article>
+        <div class="fact-card">
+          <div class="stats">
+            <div class="stat"><strong>📍 比奇堡</strong><span>故事发生的海底小镇</span></div>
+            <div class="stat"><strong>🍔 蟹堡王</strong><span>海绵宝宝的工作地点</span></div>
+            <div class="stat"><strong>🪼 抓水母</strong><span>最爱的休闲活动之一</span></div>
+            <div class="stat"><strong>💛 乐观派</strong><span>面对生活的招牌态度</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="friends">
+      <div class="section-head">
+        <div class="kicker">The Undersea Crew</div>
+        <h2>认识海底朋友圈</h2>
+        <p>点击角色卡片，看看这些性格迥异的伙伴各有什么魅力。</p>
+      </div>
+      <div class="character-grid">
+        <article class="character active" tabindex="0" role="button" data-name="海绵宝宝" data-detail="热情、勤奋、想象力丰富。无论是工作还是玩耍，他都能全情投入，还特别珍惜身边的朋友。">
+          <span class="emoji">🧽</span><h3>海绵宝宝</h3><div class="tag">快乐发动机</div><p>永远充满热情的蟹堡王厨师。</p>
+        </article>
+        <article class="character" tabindex="0" role="button" data-name="派大星" data-detail="海绵宝宝最要好的朋友，住在石头下面。派大星有时迷糊得让人哭笑不得，却总能带来意想不到的欢乐。">
+          <span class="emoji">⭐</span><h3>派大星</h3><div class="tag">随缘生活家</div><p>简单直接，常常自带喜剧效果。</p>
+        </article>
+        <article class="character" tabindex="0" role="button" data-name="章鱼哥" data-detail="喜欢安静、吹竖笛和艺术的邻居，也是蟹堡王的收银员。虽然常被热闹的邻居打扰，但他也有自己认真追求的生活。">
+          <span class="emoji">🐙</span><h3>章鱼哥</h3><div class="tag">安静的艺术家</div><p>渴望清静，也有自己的艺术梦想。</p>
+        </article>
+        <article class="character" tabindex="0" role="button" data-name="蟹老板" data-detail="蟹堡王的老板，最关心生意和钱，但也很看重自己的餐厅。围绕美味蟹堡秘方发生的故事，是动画中的经典桥段。">
+          <span class="emoji">🦀</span><h3>蟹老板</h3><div class="tag">生意头脑派</div><p>精打细算，经营着蟹堡王餐厅。</p>
+        </article>
+      </div>
+      <div class="character-detail" id="characterDetail" aria-live="polite"><strong>海绵宝宝：</strong>热情、勤奋、想象力丰富。无论是工作还是玩耍，他都能全情投入，还特别珍惜身边的朋友。</div>
+    </section>
+
+    <section id="places">
+      <div class="section-head">
+        <div class="kicker">Explore the Town</div>
+        <h2>比奇堡打卡地图</h2>
+        <p>如果能去海底旅行，这几个地方一定要加入路线！</p>
+      </div>
+      <div class="place-grid">
+        <article class="place"><div class="icon">🍍</div><div><h3>海绵宝宝的菠萝屋</h3><p>温馨又奇妙的家，也是许多日常冒险的起点。</p></div></article>
+        <article class="place"><div class="icon">🍔</div><div><h3>蟹堡王餐厅</h3><p>美味蟹堡的诞生地，海绵宝宝大展厨艺的舞台。</p></div></article>
+        <article class="place"><div class="icon">🪼</div><div><h3>水母田</h3><p>带上网兜，感受海风——呃，海水里的自由时光！</p></div></article>
+      </div>
+    </section>
+
+    <section id="fun">
+      <div class="section-head">
+        <div class="kicker">A Little Sunshine</div>
+        <h2>今日快乐补给站</h2>
+        <p>海底生活偶尔也会遇到小麻烦，不如先收下一句鼓励。</p>
+      </div>
+      <div class="quote-box">
+        <blockquote id="quote">“只要心里有阳光，平凡的一天也能闪闪发亮！”</blockquote>
+        <p id="quoteBy">—— 比奇堡快乐电台</p>
+        <div style="margin-top:22px"><button class="btn btn-primary" id="quoteBtn">🔄 再来一句</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>🫧 愿你今天也拥有一点海绵宝宝式的快乐！</div>
+    <small>本页面为粉丝向介绍页面，角色及相关名称属于其各自权利人。非官方页面。</small>
+  </footer>
+  <button class="to-top" id="toTop" aria-label="返回顶部">↑</button>
+
+  <script>
+    // 动态气泡背景
+    const bubbleLayer = document.getElementById('bubbles');
+    for (let i = 0; i < 24; i++) {
+      const bubble = document.createElement('span');
+      bubble.className = 'bubble';
+      const size = 10 + Math.random() * 36;
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+      bubble.style.left = Math.random() * 100 + '%';
+      bubble.style.animationDuration = (9 + Math.random() * 15) + 's';
+      bubble.style.animationDelay = (-Math.random() * 20) + 's';
+      bubbleLayer.appendChild(bubble);
+    }
+
+    // 角色卡片交互
+    const characters = document.querySelectorAll('.character');
+    const detail = document.getElementById('characterDetail');
+    function selectCharacter(card) {
+      characters.forEach(item => item.classList.remove('active'));
+      card.classList.add('active');
+      detail.innerHTML = '<strong>' + card.dataset.name + '：</strong>' + card.dataset.detail;
+    }
+    characters.forEach(card => {
+      card.addEventListener('click', () => selectCharacter(card));
+      card.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          selectCharacter(card);
+        }
+      });
+    });
+
+    // 快乐语录随机切换（以下为页面原创文案，并非动画原台词）
+    const quotes = [
+      ['“只要心里有阳光，平凡的一天也能闪闪发亮！”', '—— 比奇堡快乐电台'],
+      ['“慢一点也没关系，记得看看路边的泡泡。”', '—— 海底散步提示'],
+      ['“今天完成一件小事，也值得给自己一个赞。”', '—— 快乐补给站'],
+      ['“朋友不必时时相同，但可以一起分享快乐。”', '—— 比奇堡友情指南'],
+      ['“偶尔犯迷糊没关系，下一次再试试看！”', '—— 派大星式哲学']
+    ];
+    function newQuote() {
+      const current = document.getElementById('quote').textContent;
+      let pick = quotes[Math.floor(Math.random() * quotes.length)];
+      if (quotes.length > 1) while (pick[0] === current) pick = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('quote').textContent = pick[0];
+      document.getElementById('quoteBy').textContent = pick[1];
+    }
+    document.getElementById('quoteBtn').addEventListener('click', newQuote);
+    document.getElementById('surpriseBtn').addEventListener('click', () => {
+      newQuote();
+      document.getElementById('fun').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // 滚动后显示返回顶部按钮
+    const toTop = document.getElementById('toTop');
+    window.addEventListener('scroll', () => toTop.classList.toggle('show', window.scrollY > 500));
+    toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>
